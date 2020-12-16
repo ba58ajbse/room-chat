@@ -1,12 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { MsgContext } from '../context/reducer'
 
-type PropType = {
-  msg: string[]
-}
-const Msg: React.FC<PropType> = ({ msg }) => {
+const Msg: React.FC = () => {
+  const { state } = useContext(MsgContext)
   return (
     <div className="messages">
-      {msg && msg.map((m) => <li key={m}>{m}</li>)}
+      {state.msgList && state.msgList.map((m) => <li key={m.id}>{m.msg}</li>)}
     </div>
   )
 }

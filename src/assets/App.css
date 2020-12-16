@@ -4,14 +4,16 @@
   background-color: #282c34;
 }
 
+li,
+ul {
+  list-style: none;
+}
 /* normalize */
-body { margin: 0; }
+body {
+  margin: 0;
+}
 
 /* global styles */
-video {
-  background-color: #111;
-  width: 100%;
-}
 
 .heading {
   text-align: center;
@@ -24,7 +26,7 @@ video {
 
 .meta {
   text-align: center;
-  font-size: .8rem;
+  font-size: 0.8rem;
   color: gray;
 }
 
@@ -76,7 +78,7 @@ video {
 }
 
 .room .messages {
-  background-color: #eee;
+  background-color: #495161;
   min-height: 100px;
   padding: 8px;
   margin-top: 0;
