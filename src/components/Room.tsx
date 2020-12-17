@@ -4,15 +4,21 @@ import { MsgContext } from '../context/reducer'
 import useInput from '../hooks/useInput'
 import Button from './atoms/Button'
 import Input from './atoms/Input'
+import ModalDisp from './ModalDisp'
 import MsgDisp from './MsgDisp'
+import RoomList from './RoomList'
+
+import { RoomInfoType } from '../interface/interface'
 
 const skywayKey = process.env.REACT_APP_SKYWAY_KEY
 const peer = skywayKey !== undefined ? new Peer({ key: skywayKey }) : ''
 
 const Room: React.FC = () => {
   const [localId, setLocalId] = useState('')
-  const [roomId, onChgRoomId] = useInput('')
+  const [roomName, onChgRoomId] = useInput('')
+  const [roomPass, onChgRoomPass] = useInput('')
   const [localText, onChgLocalText, reset] = useInput('')
+  const [roomList, setRoomList] = useState<RoomInfoType[]>([])
   const roomState = useRef<any>(null) // eslint-disable-line @typescript-eslint/no-explicit-any
   const joinState = useRef<boolean>(false)
   const { dispatch } = useContext(MsgContext)
@@ -21,7 +27,7 @@ const Room: React.FC = () => {
     if (peer) {
       peer.once('open', (id) => setLocalId(id))
     }
-  }, [])
+  }, [localId])
 
   const setMsg = (text: string) => {
     dispatch({
@@ -30,10 +36,36 @@ const Room: React.FC = () => {
     })
   }
 
+  // todo 外に出す
+  const setRandomId = () => {
+    const string = localId
+    const len = string.length
+    let id = ''
+    for (let i = 0; i < len; i += 1) {
+      id += string.charAt(Math.floor(Math.random() * len))
+    }
+
+    return id
+  }
+
+  const addRoomList = () => {
+    const roomInfo = {
+      id: setRandomId(),
+      name: roomName,
+      password: roomPass,
+    }
+    console.log(roomInfo)
+
+    setRoomList([...roomList, roomInfo])
+  }
+
   const joinTrigger = () => {
     if (!peer || !peer.open) return
+    if (!roomName || !roomPass) return
 
-    const room = peer.joinRoom(roomId, { mode: 'mesh' })
+    const room = peer.joinRoom(roomName, { mode: 'mesh' })
+    addRoomList()
+
     roomState.current = room
 
     room.once('open', () => {
@@ -79,15 +111,21 @@ const Room: React.FC = () => {
           <p>
             Your ID: <span>{localId}</span>
           </p>
-          <Input ph="Room Name" value={roomId} onChange={onChgRoomId} />
-          <Button value="Join" func={joinTrigger} />
-          <Button value="Leave" func={leaveTrigger} />
+          <ModalDisp>
+            <Input ph="Room Name" value={roomName} onChange={onChgRoomId} />
+            <Input ph="Password" value={roomPass} onChange={onChgRoomPass} />
+            <Button value="Join" func={joinTrigger} />
+          </ModalDisp>
+          {joinState.current && <Button value="Leave" func={leaveTrigger} />}
         </div>
         <div>
           <MsgDisp />
           <Input value={localText} onChange={onChgLocalText} />
           <Button value="Send" func={sendMsg} />
         </div>
+      </div>
+      <div>
+        <RoomList roomList={roomList} />
       </div>
       <p className="meta" id="js-meta" />
     </div>
