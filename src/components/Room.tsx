@@ -4,7 +4,7 @@ import { MsgContext } from '../context/reducer'
 import useInput from '../hooks/useInput'
 import Button from './atoms/Button'
 import Input from './atoms/Input'
-import Msg from './Msg'
+import MsgDisp from './MsgDisp'
 
 const skywayKey = process.env.REACT_APP_SKYWAY_KEY
 const peer = skywayKey !== undefined ? new Peer({ key: skywayKey }) : ''
@@ -72,19 +72,17 @@ const Room: React.FC = () => {
   return (
     <div className="container">
       <h1 className="heading">Room example</h1>
-      <p className="note">Change Room mode (before join in a room)</p>
       <div className="room">
         <div>
           <p>
             Your ID: <span>{localId}</span>
           </p>
-          <span id="js-room-mode" />
           <Input ph="Room Name" value={roomId} onChange={onChgRoomId} />
           <Button value="Join" func={joinTrigger} />
           <Button value="Leave" func={leaveTrigger} />
         </div>
         <div>
-          <Msg />
+          <MsgDisp />
           <Input value={localText} onChange={onChgLocalText} />
           <Button value="Send" func={sendMsg} />
         </div>
