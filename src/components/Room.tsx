@@ -15,7 +15,7 @@ const Room: React.FC = () => {
   const [localText, onChgLocalText, reset] = useInput('')
   const roomState = useRef<any>(null) // eslint-disable-line @typescript-eslint/no-explicit-any
   const joinState = useRef<boolean>(false)
-  const { state, dispatch } = useContext(MsgContext)
+  const { dispatch } = useContext(MsgContext)
 
   useEffect(() => {
     if (peer) {
@@ -26,7 +26,7 @@ const Room: React.FC = () => {
   const setMsg = (text: string) => {
     dispatch({
       type: 'ADD_MSG',
-      payload: { id: state.nextMsgId, msg: text },
+      payload: { msg: text },
     })
   }
 

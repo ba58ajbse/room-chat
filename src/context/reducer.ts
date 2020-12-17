@@ -12,7 +12,7 @@ type MsgListType = {
 
 type AddMsgType = {
   type: 'ADD_MSG'
-  payload: { id: number; msg: string }
+  payload: { msg: string }
 }
 
 type MsgActionType = AddMsgType
@@ -39,7 +39,7 @@ export const msgReducer = (
         ...state,
         msgList: [
           ...state.msgList,
-          { id: action.payload.id, msg: action.payload.msg },
+          { id: state.nextMsgId, msg: action.payload.msg },
         ],
         nextMsgId: state.nextMsgId + 1,
       }
