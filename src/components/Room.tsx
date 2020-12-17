@@ -11,7 +11,7 @@ const Room: React.FC = () => {
   const [roomId, setRoomId] = useState('')
   const { state, dispatch } = useContext(MsgContext)
   const [localText, setLocalText] = useState('')
-  const roomState = useRef<any>(null)
+  const roomState = useRef<any>(null) // eslint-disable-line @typescript-eslint/no-explicit-any
   const joinState = useRef<boolean>(false)
 
   if (peer) {
