@@ -1,7 +1,9 @@
-import React, { useState, ChangeEvent, useRef, useContext } from 'react'
+import React, { useState, useRef, useContext } from 'react'
 import Peer from 'skyway-js'
 import { MsgContext } from '../context/reducer'
+import useInput from '../hooks/useInput'
 import Button from './atoms/Button'
+import Input from './atoms/Input'
 import Msg from './Msg'
 
 const skywayKey = process.env.REACT_APP_SKYWAY_KEY
@@ -9,11 +11,11 @@ const peer = skywayKey !== undefined ? new Peer({ key: skywayKey }) : ''
 
 const Room: React.FC = () => {
   const [localId, setLocalId] = useState('')
-  const [roomId, setRoomId] = useState('')
-  const { state, dispatch } = useContext(MsgContext)
-  const [localText, setLocalText] = useState('')
+  const [roomId, onChgRoomId] = useInput('')
+  const [localText, onChgLocalText, reset] = useInput('')
   const roomState = useRef<any>(null) // eslint-disable-line @typescript-eslint/no-explicit-any
   const joinState = useRef<boolean>(false)
+  const { state, dispatch } = useContext(MsgContext)
 
   if (peer) {
     peer.once('open', (id) => setLocalId(id))
@@ -59,7 +61,7 @@ const Room: React.FC = () => {
     if (!joinState.current) return
     roomState.current.send(localText)
     setMsg(`You > ${localText}`)
-    setLocalText('')
+    reset()
   }
 
   const leaveTrigger = () => {
@@ -77,26 +79,13 @@ const Room: React.FC = () => {
             Your ID: <span>{localId}</span>
           </p>
           <span id="js-room-mode" />
-          <input
-            type="text"
-            placeholder="Room Name"
-            value={roomId}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setRoomId(e.target.value)
-            }
-          />
+          <Input ph="Room Name" value={roomId} onChange={onChgRoomId} />
           <Button value="Join" func={joinTrigger} />
           <Button value="Leave" func={leaveTrigger} />
         </div>
         <div>
           <Msg />
-          <input
-            type="text"
-            value={localText}
-            onChange={(e: ChangeEvent<HTMLInputElement>) =>
-              setLocalText(e.target.value)
-            }
-          />
+          <Input value={localText} onChange={onChgLocalText} />
           <Button value="Send" func={sendMsg} />
         </div>
       </div>
