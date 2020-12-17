@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from 'react'
+import React, { useState, useRef, useContext, useEffect } from 'react'
 import Peer from 'skyway-js'
 import { MsgContext } from '../context/reducer'
 import useInput from '../hooks/useInput'
@@ -15,16 +15,18 @@ const Room: React.FC = () => {
   const [localText, onChgLocalText, reset] = useInput('')
   const roomState = useRef<any>(null) // eslint-disable-line @typescript-eslint/no-explicit-any
   const joinState = useRef<boolean>(false)
-  const { state, dispatch } = useContext(MsgContext)
+  const { dispatch } = useContext(MsgContext)
 
-  if (peer) {
-    peer.once('open', (id) => setLocalId(id))
-  }
+  useEffect(() => {
+    if (peer) {
+      peer.once('open', (id) => setLocalId(id))
+    }
+  }, [])
 
   const setMsg = (text: string) => {
     dispatch({
       type: 'ADD_MSG',
-      payload: { id: state.nextMsgId, msg: text },
+      payload: { msg: text },
     })
   }
 
