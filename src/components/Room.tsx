@@ -1,6 +1,7 @@
 import React, { useState, ChangeEvent, useRef, useContext } from 'react'
 import Peer from 'skyway-js'
 import { MsgContext } from '../context/reducer'
+import Button from './atoms/Button'
 import Msg from './Msg'
 
 const skywayKey = process.env.REACT_APP_SKYWAY_KEY
@@ -54,7 +55,7 @@ const Room: React.FC = () => {
     })
   }
 
-  const send = () => {
+  const sendMsg = () => {
     if (!joinState.current) return
     roomState.current.send(localText)
     setMsg(`You > ${localText}`)
@@ -84,12 +85,8 @@ const Room: React.FC = () => {
               setRoomId(e.target.value)
             }
           />
-          <button type="button" onClick={joinTrigger}>
-            Join
-          </button>
-          <button type="button" onClick={leaveTrigger}>
-            Leave
-          </button>
+          <Button value="Join" func={joinTrigger} />
+          <Button value="Leave" func={leaveTrigger} />
         </div>
         <div>
           <Msg />
@@ -100,9 +97,7 @@ const Room: React.FC = () => {
               setLocalText(e.target.value)
             }
           />
-          <button type="button" onClick={send}>
-            Send
-          </button>
+          <Button value="Send" func={sendMsg} />
         </div>
       </div>
       <p className="meta" id="js-meta" />
