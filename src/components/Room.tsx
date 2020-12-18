@@ -2,6 +2,7 @@ import React, { useState, useRef, useContext, useEffect } from 'react'
 import Peer from 'skyway-js'
 import { MsgContext } from '../context/reducer'
 import useInput from '../hooks/useInput'
+import useModal from '../hooks/useModal'
 import Button from './atoms/Button'
 import Input from './atoms/Input'
 import Label from './atoms/Label'
@@ -19,6 +20,7 @@ const Room: React.FC = () => {
   const [roomName, onChgRoomId] = useInput('')
   const [roomPass, onChgRoomPass] = useInput('')
   const [localText, onChgLocalText, reset] = useInput('')
+  const modalState = useModal()
   const [roomList, setRoomList] = useState<RoomInfoType[]>([])
   const [joinState, setJoinState] = useState<boolean>(false)
   const roomState = useRef<any>(null) // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -57,6 +59,7 @@ const Room: React.FC = () => {
     }
 
     setRoomList([...roomList, roomInfo])
+    modalState.close()
   }
 
   const createRoom = () => {
@@ -118,7 +121,7 @@ const Room: React.FC = () => {
           <p>
             Your ID: <span>{localId}</span>
           </p>
-          <ModalDisp btnValue="create room">
+          <ModalDisp btnValue="create room" modalState={modalState}>
             <Label id="room-name" value="Name " className="room-name-label">
               <Input
                 id="room-name"
