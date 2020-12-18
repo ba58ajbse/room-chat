@@ -2,6 +2,10 @@ import React, { useState } from 'react'
 import Modal from 'react-modal'
 import Button from './atoms/Button'
 
+type PropType = {
+  btnValue: string
+}
+
 const modalStyle = {
   content: {
     top: '50%',
@@ -15,7 +19,7 @@ const modalStyle = {
 
 Modal.setAppElement('#root')
 
-const ModalDisp: React.FC = ({ children }) => {
+const ModalDisp: React.FC<PropType> = ({ btnValue, children }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
 
   const open = () => setIsOpen(true)
@@ -23,7 +27,7 @@ const ModalDisp: React.FC = ({ children }) => {
 
   return (
     <div>
-      <Button value="create room" func={open} />
+      <Button value={btnValue} func={open} />
       <Modal isOpen={isOpen} onRequestClose={close} style={modalStyle}>
         {children}
       </Modal>
