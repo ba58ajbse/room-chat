@@ -4,12 +4,12 @@ import { MsgContext } from '../context/reducer'
 import useInput from '../hooks/useInput'
 import Button from './atoms/Button'
 import Input from './atoms/Input'
+import Label from './atoms/Label'
 import ModalDisp from './ModalDisp'
 import MsgDisp from './MsgDisp'
 import RoomList from './RoomList'
 
 import { RoomInfoType } from '../interface/interface'
-import Label from './atoms/Label'
 
 const skywayKey = process.env.REACT_APP_SKYWAY_KEY
 const peer = skywayKey !== undefined ? new Peer({ key: skywayKey }) : ''
@@ -20,8 +20,8 @@ const Room: React.FC = () => {
   const [roomPass, onChgRoomPass] = useInput('')
   const [localText, onChgLocalText, reset] = useInput('')
   const [roomList, setRoomList] = useState<RoomInfoType[]>([])
+  const [joinState, setJoinState] = useState<boolean>(false)
   const roomState = useRef<any>(null) // eslint-disable-line @typescript-eslint/no-explicit-any
-  const joinState = useRef<boolean>(false)
   const { dispatch } = useContext(MsgContext)
 
   useEffect(() => {
@@ -59,18 +59,25 @@ const Room: React.FC = () => {
     setRoomList([...roomList, roomInfo])
   }
 
-  const joinTrigger = () => {
+  const createRoom = () => {
+    if (!peer || !peer.open) return
+    if (!roomName || !roomPass) return
+
+    addRoomList()
+  }
+
+  const connectRoom = (roomInfo: RoomInfoType) => {
+    console.log(roomInfo)
     if (!peer || !peer.open) return
     if (!roomName || !roomPass) return
 
     const room = peer.joinRoom(roomName, { mode: 'mesh' })
-    addRoomList()
 
     roomState.current = room
 
     room.once('open', () => {
       setMsg('=== You joined ===')
-      joinState.current = true
+      setJoinState(true)
     })
 
     room.on('peerJoin', (peerId) => {
@@ -87,19 +94,19 @@ const Room: React.FC = () => {
 
     room.once('close', () => {
       setMsg('=== You left ===')
-      joinState.current = false
+      setJoinState(false)
     })
   }
 
   const sendMsg = () => {
-    if (!joinState.current) return
+    if (!joinState) return
     roomState.current.send(localText)
     setMsg(`You > ${localText}`)
     reset()
   }
 
-  const leaveTrigger = () => {
-    if (!joinState.current) return
+  const leaveRoom = () => {
+    if (!joinState) return
     roomState.current.close()
   }
 
@@ -111,7 +118,7 @@ const Room: React.FC = () => {
           <p>
             Your ID: <span>{localId}</span>
           </p>
-          <ModalDisp>
+          <ModalDisp btnValue="create room">
             <Label id="room-name" value="Name " className="room-name-label">
               <Input
                 id="room-name"
@@ -128,9 +135,9 @@ const Room: React.FC = () => {
                 onChange={onChgRoomPass}
               />
             </Label>
-            <Button className="join-btn" value="Join" func={joinTrigger} />
+            <Button className="join-btn" value="Join" func={createRoom} />
           </ModalDisp>
-          {joinState.current && <Button value="Leave" func={leaveTrigger} />}
+          {joinState && <Button value="Leave" func={leaveRoom} />}
         </div>
         <div>
           <MsgDisp />
@@ -145,7 +152,7 @@ const Room: React.FC = () => {
         </div>
       </div>
       <div>
-        <RoomList roomList={roomList} />
+        <RoomList roomList={roomList} connectRoom={connectRoom} />
       </div>
       <p className="meta" id="js-meta" />
     </div>
