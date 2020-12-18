@@ -1,5 +1,6 @@
 import React from 'react'
 import useInput from '../hooks/useInput'
+import useModal from '../hooks/useModal'
 import { RoomInfoType } from '../interface/interface'
 import Button from './atoms/Button'
 import Input from './atoms/Input'
@@ -12,14 +13,14 @@ type PropType = {
 }
 
 const RoomList: React.FC<PropType> = ({ roomList, connectRoom }) => {
-  const [roomName, onChgRoomId] = useInput('')
-  const [roomPass, onChgRoomPass] = useInput('')
+  const [roomName, onChgRoomId, resetName] = useInput('')
+  const [roomPass, onChgRoomPass, resetPass] = useInput('')
+  const modalState = useModal()
 
   const connectInfoSend = (roomId: string) => {
     const targetRoom = roomList.find((room) => room.id === roomId)
 
     if (targetRoom === undefined) return
-
     if (targetRoom.name !== roomName || targetRoom.password !== roomPass) {
       return
     }
@@ -29,8 +30,11 @@ const RoomList: React.FC<PropType> = ({ roomList, connectRoom }) => {
       name: roomName,
       password: roomPass,
     }
-
     connectRoom(roomInfo)
+
+    resetName()
+    resetPass()
+    modalState.close()
   }
   return (
     <ul>
@@ -38,7 +42,7 @@ const RoomList: React.FC<PropType> = ({ roomList, connectRoom }) => {
         roomList.map((room) => (
           <li key={room.id}>
             {room.name}
-            <ModalDisp btnValue="connect modal">
+            <ModalDisp btnValue="connect modal" modalState={modalState}>
               <Label id="room-name" value="Name " className="room-name-label">
                 <Input
                   id="room-name"
