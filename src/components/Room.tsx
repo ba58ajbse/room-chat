@@ -9,6 +9,7 @@ import MsgDisp from './MsgDisp'
 import RoomList from './RoomList'
 
 import { RoomInfoType } from '../interface/interface'
+import Label from './atoms/Label'
 
 const skywayKey = process.env.REACT_APP_SKYWAY_KEY
 const peer = skywayKey !== undefined ? new Peer({ key: skywayKey }) : ''
@@ -54,7 +55,6 @@ const Room: React.FC = () => {
       name: roomName,
       password: roomPass,
     }
-    console.log(roomInfo)
 
     setRoomList([...roomList, roomInfo])
   }
@@ -112,15 +112,35 @@ const Room: React.FC = () => {
             Your ID: <span>{localId}</span>
           </p>
           <ModalDisp>
-            <Input ph="Room Name" value={roomName} onChange={onChgRoomId} />
-            <Input ph="Password" value={roomPass} onChange={onChgRoomPass} />
-            <Button value="Join" func={joinTrigger} />
+            <Label id="room-name" value="Name " className="room-name-label">
+              <Input
+                id="room-name"
+                className="room-name-input"
+                value={roomName}
+                onChange={onChgRoomId}
+              />
+            </Label>
+            <Label id="room-pass" value="Password " className="room-pass-label">
+              <Input
+                id="room-pass"
+                className="room-pass-input"
+                value={roomPass}
+                onChange={onChgRoomPass}
+              />
+            </Label>
+            <Button className="join-btn" value="Join" func={joinTrigger} />
           </ModalDisp>
           {joinState.current && <Button value="Leave" func={leaveTrigger} />}
         </div>
         <div>
           <MsgDisp />
-          <Input value={localText} onChange={onChgLocalText} />
+          <Label id="local-text">
+            <Input
+              id="local-text"
+              value={localText}
+              onChange={onChgLocalText}
+            />
+          </Label>
           <Button value="Send" func={sendMsg} />
         </div>
       </div>

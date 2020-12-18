@@ -26,7 +26,6 @@ const ModalDisp: React.FC = ({ children }) => {
       <Button value="create room" func={open} />
       <Modal isOpen={isOpen} onRequestClose={close} style={modalStyle}>
         {children}
-        <Button value="close" func={close} />
       </Modal>
     </div>
   )

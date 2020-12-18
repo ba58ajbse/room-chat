@@ -46,3 +46,21 @@ body {
   padding: 8px;
   margin-top: 0;
 }
+
+.room-name-label, .room-pass-label {
+  display: block;
+  margin: 8px;
+}
+
+.room-name-input, .room-pass-input {
+  border: 1px solid rgb(124, 124, 124);
+  padding: 4px;
+}
+
+.join-btn {
+  margin-top: 8px;
+  margin-left: 25%;
+  padding: 4px;
+  width: 50%;
+  text-align: center;
+}
