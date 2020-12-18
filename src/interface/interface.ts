@@ -20,3 +20,9 @@ type AddMsgType = {
 }
 
 export type MsgActionType = AddMsgType
+
+export type UseModalType = {
+  isOpen: boolean
+  open: () => void
+  close: () => void
+}

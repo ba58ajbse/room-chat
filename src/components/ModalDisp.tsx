@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import React from 'react'
 import Modal from 'react-modal'
 import Button from './atoms/Button'
+import { UseModalType } from '../interface/interface'
 
 type PropType = {
   btnValue: string
+  modalState: UseModalType
 }
 
 const modalStyle = {
@@ -19,16 +21,15 @@ const modalStyle = {
 
 Modal.setAppElement('#root')
 
-const ModalDisp: React.FC<PropType> = ({ btnValue, children }) => {
-  const [isOpen, setIsOpen] = useState<boolean>(false)
-
-  const open = () => setIsOpen(true)
-  const close = () => setIsOpen(false)
-
+const ModalDisp: React.FC<PropType> = ({ btnValue, modalState, children }) => {
   return (
     <div>
-      <Button value={btnValue} func={open} />
-      <Modal isOpen={isOpen} onRequestClose={close} style={modalStyle}>
+      <Button value={btnValue} func={modalState.open} />
+      <Modal
+        isOpen={modalState.isOpen}
+        onRequestClose={modalState.close}
+        style={modalStyle}
+      >
         {children}
       </Modal>
     </div>
