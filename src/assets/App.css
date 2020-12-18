@@ -8,6 +8,7 @@ li,
 ul {
   list-style: none;
 }
+
 /* normalize */
 body {
   margin: 0;
@@ -16,20 +17,20 @@ body {
 /* global styles */
 
 .heading {
-  text-align: center;
   margin-bottom: 0;
+  text-align: center;
 }
 
 .meta {
-  text-align: center;
   font-size: 0.8rem;
   color: gray;
+  text-align: center;
 }
 
 .container {
-  margin-left: auto;
-  margin-right: auto;
   width: 980px;
+  margin-right: auto;
+  margin-left: auto;
 }
 
 /* room */
@@ -41,8 +42,28 @@ body {
 }
 
 .room .messages {
-  background-color: #495161;
   min-height: 100px;
   padding: 8px;
   margin-top: 0;
+  background-color: #495161;
+}
+
+.room-name-label,
+.room-pass-label {
+  display: block;
+  margin: 8px;
+}
+
+.room-name-input,
+.room-pass-input {
+  padding: 4px;
+  border: 1px solid rgb(124, 124, 124);
+}
+
+.join-btn {
+  width: 50%;
+  padding: 4px;
+  margin-top: 8px;
+  margin-left: 25%;
+  text-align: center;
 }

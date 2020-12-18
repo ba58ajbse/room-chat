@@ -1,21 +1,5 @@
 import { createContext } from 'react'
-
-type Msgtype = {
-  id: number
-  msg: string
-}
-
-type MsgListType = {
-  msgList: Msgtype[]
-  nextMsgId: number
-}
-
-type AddMsgType = {
-  type: 'ADD_MSG'
-  payload: { msg: string }
-}
-
-type MsgActionType = AddMsgType
+import { MsgListType, MsgActionType } from '../interface/interface'
 
 export const initialMsg = {
   msgList: [],
