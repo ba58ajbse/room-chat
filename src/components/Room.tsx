@@ -69,8 +69,7 @@ const Room: React.FC = () => {
     addRoomList()
   }
 
-  const connectRoom = (roomInfo: RoomInfoType) => {
-    console.log(roomInfo)
+  const connectRoom = () => {
     if (!peer || !peer.open) return
     if (!roomName || !roomPass) return
 

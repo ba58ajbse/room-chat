@@ -9,30 +9,24 @@ import ModalDisp from './ModalDisp'
 
 type PropType = {
   roomList: RoomInfoType[]
-  connectRoom: (roomInfo: RoomInfoType) => void
+  connectRoom: () => void
 }
 
 const RoomList: React.FC<PropType> = ({ roomList, connectRoom }) => {
-  const [roomName, onChgRoomId, resetName] = useInput('')
   const [roomPass, onChgRoomPass, resetPass] = useInput('')
   const modalState = useModal()
 
-  const connectInfoSend = (roomId: string) => {
-    const targetRoom = roomList.find((room) => room.id === roomId)
+  const connectInfoSend = (roomId: string, roomName: string) => {
+    const targetRoom = roomList.find(
+      (room) => room.id === roomId && room.name === roomName
+    )
 
     if (targetRoom === undefined) return
-    if (targetRoom.name !== roomName || targetRoom.password !== roomPass) {
+    if (targetRoom.password !== roomPass) {
       return
     }
 
-    const roomInfo = {
-      id: roomId,
-      name: roomName,
-      password: roomPass,
-    }
-    connectRoom(roomInfo)
-
-    resetName()
+    connectRoom()
     resetPass()
     modalState.close()
   }
@@ -43,14 +37,9 @@ const RoomList: React.FC<PropType> = ({ roomList, connectRoom }) => {
           <li key={room.id}>
             {room.name}
             <ModalDisp btnValue="connect modal" modalState={modalState}>
-              <Label id="room-name" value="Name " className="room-name-label">
-                <Input
-                  id="room-name"
-                  className="room-name-input"
-                  value={roomName}
-                  onChange={onChgRoomId}
-                />
-              </Label>
+              <p>
+                Room Name: <span>{room.name}</span>
+              </p>
               <Label
                 id="room-pass"
                 value="Password "
@@ -66,7 +55,7 @@ const RoomList: React.FC<PropType> = ({ roomList, connectRoom }) => {
               <Button
                 className="join-btn"
                 value="Join"
-                func={() => connectInfoSend(room.id)}
+                func={() => connectInfoSend(room.id, room.name)}
               />
             </ModalDisp>
           </li>
