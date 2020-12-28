@@ -9,6 +9,7 @@ import Label from './atoms/Label'
 import ModalDisp from './ModalDisp'
 import MsgDisp from './MsgDisp'
 import RoomList from './RoomList'
+import { addRoomFB } from '../plugins/firebase'
 
 import { RoomInfoType } from '../interface/interface'
 
@@ -51,7 +52,7 @@ const Room: React.FC = () => {
     return id
   }
 
-  const addRoomList = () => {
+  const addRoomList = async () => {
     const roomInfo = {
       id: setRandomId(),
       name: roomName,
@@ -59,6 +60,8 @@ const Room: React.FC = () => {
     }
 
     setRoomList([...roomList, roomInfo])
+    const ret = addRoomFB(roomInfo)
+    console.log(ret)
     modalState.close()
   }
 

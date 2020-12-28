@@ -1,4 +1,5 @@
 import React from 'react'
+// import { firestore } from '../plugins/firebase'
 import useInput from '../hooks/useInput'
 import useModal from '../hooks/useModal'
 import { RoomInfoType } from '../interface/interface'
@@ -11,10 +12,14 @@ type PropType = {
   roomList: RoomInfoType[]
   connectRoom: () => void
 }
+// const list = firestore.collection('roomList')
 
 const RoomList: React.FC<PropType> = ({ roomList, connectRoom }) => {
   const [roomPass, onChgRoomPass, resetPass] = useInput('')
   const modalState = useModal()
+  // const getList: any[] = []
+  // list.get().then((doc) => doc.forEach((res) => getList.push(res.data())))
+  // console.log(getList)
 
   const connectInfoSend = (roomId: string, roomName: string) => {
     const targetRoom = roomList.find(
