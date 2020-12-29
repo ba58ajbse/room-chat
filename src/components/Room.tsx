@@ -8,11 +8,9 @@ import Input from './atoms/Input'
 import Label from './atoms/Label'
 import ModalDisp from './ModalDisp'
 import MsgDisp from './MsgDisp'
-import RoomList from './RoomList'
 import { addRoomFB } from '../plugins/firebase'
-
-import { RoomInfoType } from '../interface/interface'
 import RoomListModal from './RoomListModal'
+import useFirestore from '../hooks/useFirestore'
 
 const skywayKey = process.env.REACT_APP_SKYWAY_KEY
 const peer = skywayKey !== undefined ? new Peer({ key: skywayKey }) : ''
@@ -23,7 +21,7 @@ const Room: React.FC = () => {
   const [roomPass, onChgRoomPass] = useInput('')
   const [localText, onChgLocalText, reset] = useInput('')
   const modalState = useModal()
-  const [roomList, setRoomList] = useState<RoomInfoType[]>([])
+  const { roomList } = useFirestore()
   const [joinState, setJoinState] = useState<boolean>(false)
   const roomState = useRef<any>(null) // eslint-disable-line @typescript-eslint/no-explicit-any
   const { dispatch } = useContext(MsgContext)
@@ -60,7 +58,6 @@ const Room: React.FC = () => {
       password: roomPass,
     }
 
-    setRoomList([...roomList, roomInfo])
     const ret = addRoomFB(roomInfo)
     console.log(ret)
     modalState.close()
@@ -73,11 +70,10 @@ const Room: React.FC = () => {
     addRoomList()
   }
 
-  const connectRoom = () => {
+  const connectRoom = (roomInfoName: string) => {
     if (!peer || !peer.open) return
-    if (!roomName || !roomPass) return
 
-    const room = peer.joinRoom(roomName, { mode: 'mesh' })
+    const room = peer.joinRoom(roomInfoName, { mode: 'mesh' })
 
     roomState.current = room
 
@@ -157,9 +153,9 @@ const Room: React.FC = () => {
           <Button value="Send" func={sendMsg} />
         </div>
       </div>
-      <div>
+      {/* <div>
         <RoomList roomList={roomList} connectRoom={connectRoom} />
-      </div>
+      </div> */}
       <div>
         <RoomListModal roomList={roomList} connectRoom={connectRoom} />
       </div>
