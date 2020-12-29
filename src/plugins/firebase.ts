@@ -16,14 +16,23 @@ if (firebase.apps.length === 0) {
   firebase.initializeApp(firebaseConfig)
 }
 export default firebase
-export const firestore = firebase.firestore()
+export const store = firebase.firestore()
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const addRoomFB = async (info: RoomInfoType): Promise<any> => {
-  const roomList = firestore.collection('roomList')
+  const roomList = store.collection('roomList')
   const ret = await roomList
     .add(info)
     .then((res) => res.id)
     .catch((error) => error)
 
   return ret
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const getRoomList = async () => {
+  const roomList = store.collection('roomList')
+  const snapshots = await roomList.get()
+  const docs = snapshots.docs.map((doc) => doc.data())
+  // console.log(docs)
+  return docs
 }

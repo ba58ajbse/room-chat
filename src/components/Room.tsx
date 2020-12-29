@@ -12,6 +12,7 @@ import RoomList from './RoomList'
 import { addRoomFB } from '../plugins/firebase'
 
 import { RoomInfoType } from '../interface/interface'
+import RoomListModal from './RoomListModal'
 
 const skywayKey = process.env.REACT_APP_SKYWAY_KEY
 const peer = skywayKey !== undefined ? new Peer({ key: skywayKey }) : ''
@@ -52,7 +53,7 @@ const Room: React.FC = () => {
     return id
   }
 
-  const addRoomList = async () => {
+  const addRoomList = () => {
     const roomInfo = {
       id: setRandomId(),
       name: roomName,
@@ -158,6 +159,9 @@ const Room: React.FC = () => {
       </div>
       <div>
         <RoomList roomList={roomList} connectRoom={connectRoom} />
+      </div>
+      <div>
+        <RoomListModal roomList={roomList} connectRoom={connectRoom} />
       </div>
       <p className="meta" id="js-meta" />
     </div>
