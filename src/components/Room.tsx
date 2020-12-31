@@ -2,26 +2,19 @@ import React, { useState, useRef, useContext, useEffect } from 'react'
 import Peer from 'skyway-js'
 import { MsgContext } from '../context/reducer'
 import useInput from '../hooks/useInput'
-import useModal from '../hooks/useModal'
 import Button from './atoms/Button'
 import Input from './atoms/Input'
 import Label from './atoms/Label'
-import ModalDisp from './ModalDisp'
 import MsgDisp from './MsgDisp'
-import { addRoomFB } from '../plugins/firebase'
 import RoomListModal from './RoomListModal'
-import useFirestore from '../hooks/useFirestore'
+import RoomCreateModal from './RoomCreateModal'
 
 const skywayKey = process.env.REACT_APP_SKYWAY_KEY
 const peer = skywayKey !== undefined ? new Peer({ key: skywayKey }) : ''
 
 const Room: React.FC = () => {
   const [localId, setLocalId] = useState('')
-  const [roomName, onChgRoomId] = useInput('')
-  const [roomPass, onChgRoomPass] = useInput('')
   const [localText, onChgLocalText, reset] = useInput('')
-  const modalState = useModal()
-  const { roomList } = useFirestore()
   const [joinState, setJoinState] = useState<boolean>(false)
   const roomState = useRef<any>(null) // eslint-disable-line @typescript-eslint/no-explicit-any
   const { dispatch } = useContext(MsgContext)
@@ -37,37 +30,6 @@ const Room: React.FC = () => {
       type: 'ADD_MSG',
       payload: { msg: text },
     })
-  }
-
-  // todo 外に出す
-  const setRandomId = () => {
-    const string = localId
-    const len = string.length
-    let id = ''
-    for (let i = 0; i < len; i += 1) {
-      id += string.charAt(Math.floor(Math.random() * len))
-    }
-
-    return id
-  }
-
-  const addRoomList = () => {
-    const roomInfo = {
-      id: setRandomId(),
-      name: roomName,
-      password: roomPass,
-    }
-
-    const ret = addRoomFB(roomInfo)
-    console.log(ret)
-    modalState.close()
-  }
-
-  const createRoom = () => {
-    if (!peer || !peer.open) return
-    if (!roomName || !roomPass) return
-
-    addRoomList()
   }
 
   const connectRoom = (roomInfoName: string) => {
@@ -120,25 +82,7 @@ const Room: React.FC = () => {
           <p>
             Your ID: <span>{localId}</span>
           </p>
-          <ModalDisp btnValue="create room" modalState={modalState}>
-            <Label id="room-name" value="Name " className="room-name-label">
-              <Input
-                id="room-name"
-                className="room-name-input"
-                value={roomName}
-                onChange={onChgRoomId}
-              />
-            </Label>
-            <Label id="room-pass" value="Password " className="room-pass-label">
-              <Input
-                id="room-pass"
-                className="room-pass-input"
-                value={roomPass}
-                onChange={onChgRoomPass}
-              />
-            </Label>
-            <Button className="join-btn" value="Join" func={createRoom} />
-          </ModalDisp>
+          <RoomCreateModal localId={localId} />
           {joinState && <Button value="Leave" func={leaveRoom} />}
         </div>
         <div>
@@ -153,11 +97,8 @@ const Room: React.FC = () => {
           <Button value="Send" func={sendMsg} />
         </div>
       </div>
-      {/* <div>
-        <RoomList roomList={roomList} connectRoom={connectRoom} />
-      </div> */}
       <div>
-        <RoomListModal roomList={roomList} connectRoom={connectRoom} />
+        <RoomListModal connectRoom={connectRoom} />
       </div>
       <p className="meta" id="js-meta" />
     </div>
